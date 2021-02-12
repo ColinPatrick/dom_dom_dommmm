@@ -1,55 +1,54 @@
-window.addEventListener('DOMContentLoaded', function(){
-  let btn = document.createElement('BUTTON');
-  btn.innerHTML = "Add Square";
-  let container = document.createElement('div');
-  container.className = "container";
-  let squareCount = 0;
-  document.body.appendChild(btn);
-  document.body.appendChild(container);
+const btn = document.createElement('BUTTON');
+btn.textContent = "Add Square";
+const container = document.createElement('div');
+container.className = "container";
+let squareCount = 1;
+document.body.appendChild(btn);
+document.body.appendChild(container);
 
-  btn.addEventListener('click', function(){
-    let square = document.createElement('div');
-    square.className = "squares";
-    squareCount++;
-    square.setAttribute("id", squareCount);
+class Box {
+  constructor() {
+    this.div = document.createElement('div');
+    this.value = document.createTextNode(squareCount);
+    this.render();
+    this.eventListeners();
+  };
 
-    let squareCountSpan = document.createElement('span');
-    squareCountSpan.textContent = squareCount;
-    squareCountSpan.className = 'hide-span';
+  render() {
+    this.value.className = "boxText";
+    this.div.className = "box";
+    this.div.id = squareCount;
+    container.appendChild(this.div);
+  };
 
-    square.appendChild(squareCountSpan);
-
-    square.addEventListener("mouseenter", function(){
-      squareCountSpan.className = "show-span";
+  eventListeners() {
+    this.div.addEventListener("mouseover", () => this.div.appendChild(this.value));
+    this.div.addEventListener("mouseout", () => this.div.removeChild(this.value));
+    this.div.addEventListener("click", () => {
+      let r = Math.floor(Math.random() * 256);
+      let g = Math.floor(Math.random() * 256);
+      let b = Math.floor(Math.random() * 256);
+      this.div.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
     });
-
-    square.addEventListener("mouseleave", function(){
-      squareCountSpan.className = "hide-span";
-    });
-
-    square.addEventListener("click", function(){
-      let colors = ['blue', 'yellow', 'red', 'green', 'purple', 'brown', 'pink', 'magenta'];
-      let randomNum = Math.floor(Math.random() * colors.length);
-      square.style.backgroundColor = colors[randomNum];
-    });
-
-    square.addEventListener("dblclick", function(){
-      if (square.id % 2 == 0) {
-        if (square.nextSibling) {
-          container.removeChild(square.nextSibling);
+    this.div.addEventListener("dblclick", () => {
+      if (this.div.id % 2 == 0) {
+        if (this.div.nextSibling) {
+          container.removeChild(this.div.nextSibling);
         } else {
           alert('There is no following square!');
         };
       } else {
-          if (square.previousSibling) {
-            container.removeChild(square.previousSibling);
+          if (this.div.previousSibling) {
+            container.removeChild(this.div.previousSibling);
           } else {
             alert('There is no previous square!');
           };
       };
     });
+  };
+};
 
-    container.appendChild(square);
-  });
-
+btn.addEventListener('click', function() {
+  new Box();
+  squareCount++;
 });
